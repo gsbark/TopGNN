@@ -3,7 +3,7 @@ import shutil
 import torch
 import math
 from torch_geometric.loader import DataLoader
-from GNN_pyg import *
+from gnn_utils import *
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 import time 
@@ -147,32 +147,33 @@ def run_train(epochs = 500,mlp_hidden=128,mp_layers=2,time_windows=5,loss_arg='B
         writer.flush()
     return best_loss,saved_accuracy
 
-#Model parameters
-parameters = dict(
-    mlp_hidden = [32],
-    mp_layers = [5],
-    model = ["Edge_conv"],
-    time_windows = [5],
-    loss_type = ['BCE'])
+if __name__=='__main__':
+    #Model parameters
+    parameters = dict(
+        mlp_hidden = [32],
+        mp_layers = [5],
+        model = ["Edge_conv"],
+        time_windows = [5],
+        loss_type = ['BCE'])
 
-param_values = [v for v in parameters.values()]
+    param_values = [v for v in parameters.values()]
 
-for mlp_hidden,mp_layers,model,time_windows,loss_type in product(*param_values):
-    print("-"*30)
-    print("Model_parameters :","mlp_hidden :", mlp_hidden,"mp_layers :", mp_layers,"Time_windows:",time_windows,"GNN_module:" ,model,"Loss:" ,loss_type)
-    print("-"*30)
+    for mlp_hidden,mp_layers,model,time_windows,loss_type in product(*param_values):
+        print("-"*30)
+        print("Model_parameters :","mlp_hidden :", mlp_hidden,"mp_layers :", mp_layers,"Time_windows:",time_windows,"GNN_module:" ,model,"Loss:" ,loss_type)
+        print("-"*30)
 
-    com = f'__mlp_hidden={mlp_hidden}_mp_layer={mp_layers}_Time_windows={time_windows}_GNN_module={model}_Loss={loss_type}'
-    writer = SummaryWriter(comment=com)
-    total_loss,accuracy = run_train(epochs=200,mlp_hidden=mlp_hidden,mp_layers=mp_layers,time_windows = time_windows,module = model,loss_arg=loss_type)
+        com = f'__mlp_hidden={mlp_hidden}_mp_layer={mp_layers}_Time_windows={time_windows}_GNN_module={model}_Loss={loss_type}'
+        writer = SummaryWriter(comment=com)
+        total_loss,accuracy = run_train(epochs=200,mlp_hidden=mlp_hidden,mp_layers=mp_layers,time_windows = time_windows,module = model,loss_arg=loss_type)
 
-    writer.add_hparams({"mlp_hidden":mlp_hidden,
-                        "mp_layers": mp_layers,
-                        "time_windows":time_windows,
-                        "Model":model,
-                        'Loss':loss_type},
-                        {"Loss":total_loss,
-                        "Accuracy":accuracy})
-    writer.flush()
-writer.close()
+        writer.add_hparams({"mlp_hidden":mlp_hidden,
+                            "mp_layers": mp_layers,
+                            "time_windows":time_windows,
+                            "Model":model,
+                            'Loss':loss_type},
+                            {"Loss":total_loss,
+                            "Accuracy":accuracy})
+        writer.flush()
+    writer.close()
 

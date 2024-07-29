@@ -49,8 +49,8 @@ class CreateDataset(Dataset):
         return dataset 
 
 def Get_dataset(windows:int=5,kNN_graph:int=10,dtype:torch.dtype=torch.float32):
-    density = torch.tensor(np.load('./NN_dataset/densities.npy'),dtype=dtype)
-    coords = torch.tensor(np.load('./NN_dataset/coords.npy'),dtype=dtype)
+    density = torch.tensor(np.load('./Dataset/densities.npy'),dtype=dtype)
+    coords = torch.tensor(np.load('./Dataset/coords.npy'),dtype=dtype)
     assert density.shape[-1]-1 >=windows, 'Not enough timesteps in the dataset'
     dataset = CreateDataset(density,coords,kNN=kNN_graph,window_length= windows)
     return dataset 
