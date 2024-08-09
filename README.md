@@ -15,7 +15,7 @@ The following libraries are required:
 
 ### 1. Set Up the Environment
 
-Create a virtual environment containing all the dependencies and then configure the Python interpreter in MATLAB.
+Create a virtual environment containing all the dependencies and then configure the Python interpreter in MATLAB:
 
 ```matlab
 pyenv('path_to_topgnn-env/python');
