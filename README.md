@@ -15,7 +15,7 @@ The following libraries are required:
 
 ### 1. Set Up the Environment
 
-Create a virtual enviroment containing all the dependecies and then configure Python interpreter in MATLAB.
+Create a virtual environment containing all the dependencies and then configure the Python interpreter in MATLAB.
 
 ```matlab
 pyenv('path_to_topgnn-env/python');
@@ -26,6 +26,6 @@ pyenv('path_to_topgnn-env/python');
 
 To run a 2D topology optimization problem example, navigate to the `examples` folder and execute `RunTest_2D.m`
 
-2. Training the Model:
+#### 2. Training the Model:
 
-To train the GNN model execute  `main_train.py` in the `GNN` folder
+To train the GNN model, execute  `main_train.py` in the `GNN` folder
