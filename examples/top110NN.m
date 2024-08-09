@@ -6,7 +6,24 @@ function [num_iter,fconv,NN_c] = top110NN(nelx,nely,volfrac,penal,rmin,ft,holes,
     Emin = 1e-5;
     nu = 0.3;
     %% PREPARE FINITE ELEMENT ANALYSIS
-    [KE,iK,jK,F,U,~,~,freedofs,edofMat]=Q1(nu,nelx,nely,2);
+    A11 = [12  3 -6 -3;  3 12  3  0; -6  3 12 -3; -3  0 -3 12];
+    A12 = [-6 -3  0  3; -3 -6 -3 -6;  0 -3 -6  3;  3 -6  3 -6];
+    B11 = [-4  3 -2  9;  3 -4 -9  4; -2 -9 -4 -3;  9  4 -3 -4];
+    B12 = [ 2 -3  4 -9; -3  2  9 -2;  4  9  2  3; -9 -2  3  2];
+    KE = 1/(1-nu^2)/24*([A11 A12;A12' A11]+nu*[B11 B12;B12' B11]);
+    nodenrs = reshape(1:(1+nelx)*(1+nely),1+nely,1+nelx);
+    edofVec = reshape(2*nodenrs(1:end-1,1:end-1)+1,nelx*nely,1);
+    edofMat = repmat(edofVec,1,8)+repmat([0 1 2*nely+[2 3 0 1] -2 -1],nelx*nely,1);
+    iK = reshape(kron(edofMat,ones(8,1))',64*nelx*nely,1);
+    jK = reshape(kron(edofMat,ones(1,8))',64*nelx*nely,1);
+    % Load node 
+    F = sparse(2*(nely+1)*(nelx+1),1,-1,2*(nely+1)*(nelx+1),1);
+    % Fixeddofs all left
+    fixeddofs = [1:2*nely+1];
+    U = zeros(2*(nely+1)*(nelx+1),1);
+    %% Fixeddofs rollers and pinned
+    alldofs = [1:2*(nely+1)*(nelx+1)];
+    freedofs = setdiff(alldofs,fixeddofs);
     el_dofs = 8;
     %% PREPARE FILTER
     iH = ones(nelx*nely*(2*(ceil(rmin)-1)+1)^2,1);
