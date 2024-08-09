@@ -18,6 +18,7 @@ The following libraries are required:
 Create a virtual enviroment containing all the dependecies and then configure Python interpreter in MATLAB.
 ```matlab
 pyenv('Version', 'path_to_topgnn-env/python');
+```
 
 2. Running Examples and Training
 1. Running a Benchmark 2D TO
